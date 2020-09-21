@@ -11,13 +11,14 @@
 #include <QTime>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QJsonDocument>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->label->setText(token);
 }
 
 MainWindow::~MainWindow()
@@ -34,7 +35,10 @@ void MainWindow::url_changed(QUrl u)
     u = u.toString().replace("#", "?");
     QUrlQuery query(u);
     token = query.queryItemValue("access_token");;
-    ui->label->setText(token);
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Токен");
+    msgBox.setText("Токен успешно получен! Можете закрыть окно авторизации");
+    msgBox.exec();
 
 }
 
@@ -45,7 +49,7 @@ void MainWindow::on_action_triggered()
     auth.exec();
 }
 
-QByteArray MainWindow::GET(QUrl url)
+QJsonDocument MainWindow::GET(QUrl url)
 {
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
     QNetworkReply* reply = manager->get(QNetworkRequest(url));
@@ -55,12 +59,12 @@ QByteArray MainWindow::GET(QUrl url)
     QTimer::singleShot(5000, &wait, SLOT(quit()));
     wait.exec();
 
-    QByteArray answer = reply->readAll();
+    QJsonDocument answer = QJsonDocument::fromJson(reply->readAll());
     reply->deleteLater();
     return answer;
 }
 
-QByteArray MainWindow::createComment()
+bool MainWindow::createComment()
 {
     QUrl current;
     QUrlQuery query("https://api.vk.com/method/board.createComment?");
@@ -72,10 +76,10 @@ QByteArray MainWindow::createComment()
     query.addQueryItem("message",ui->message->toPlainText());
     current = query.toString();
 
-    ui->label->setText(current.toString());
-    QByteArray answer = GET(current);
+    QJsonDocument answer = GET(current);
     qDebug() << answer;
-    return answer;
+    return isValid(answer);
+
 
 }
 
@@ -87,18 +91,43 @@ QStringList MainWindow::boardLinks()
     return links;
 }
 
-bool MainWindow::isValid(QByteArray)
+bool MainWindow::isValid(QJsonDocument json)
 {
+    QJsonObject root = json.object();
+    if(!root.value("error").isUndefined()) return false;
+    if(!root.value("response").isUndefined()) return true;
+
+}
+
+void MainWindow::displayRemainingTime()
+{
+    QTime displayTime = ui->timeEdit->time();
+    QTime currentTime = QTime::currentTime();
+    int secsTo = currentTime.secsTo(displayTime);
+    QTime temp(0,0,0);
+    temp = temp.addSecs(secsTo);
+    qDebug() << temp.toString();
+    ui->timeDisplays->setText(temp.toString());
 
 }
 
 void MainWindow::on_pushButton_clicked()
 {
-    for(int i = 0; i < 100; i++)
+    do
     {
-        createComment();
+        displayRemainingTime();
         QEventLoop wait;
-        QTimer::singleShot(3000, &wait, SLOT(quit()));
+        QTimer::singleShot(500, &wait, SLOT(quit()));
         wait.exec();
+
+    }while(ui->timeEdit->time().toString() != QTime::currentTime().toString());
+
+    if(ui->timeEdit->time().toString() >= QTime::currentTime().toString()){
+        while(!createComment())
+        {
+            QEventLoop wait;
+            QTimer::singleShot(3000, &wait, SLOT(quit()));
+            wait.exec();
+        }
     }
 }

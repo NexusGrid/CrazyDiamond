@@ -24,11 +24,14 @@ private slots:
 
     void on_pushButton_clicked();
 
+
 private:
     Ui::MainWindow *ui;
     QString token;
-    QByteArray GET(QUrl);
-    void createComment();
+    QJsonDocument GET(QUrl);
+    bool createComment();
     QStringList boardLinks();
+    bool isValid(QJsonDocument);
+    void displayRemainingTime();
 };
 #endif // MAINWINDOW_H

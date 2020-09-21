@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>441</width>
+    <height>412</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>441</width>
+    <height>412</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>441</width>
+    <height>412</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -20,19 +32,19 @@
    <widget class="QTextEdit" name="message">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>140</y>
-      <width>261</width>
-      <height>201</height>
+      <x>10</x>
+      <y>100</y>
+      <width>221</width>
+      <height>141</height>
      </rect>
     </property>
    </widget>
    <widget class="QTextEdit" name="boardLink">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>80</y>
-      <width>461</width>
+      <x>10</x>
+      <y>30</y>
+      <width>221</width>
       <height>31</height>
      </rect>
     </property>
@@ -40,34 +52,52 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>60</y>
-      <width>161</width>
+      <x>10</x>
+      <y>10</y>
+      <width>221</width>
       <height>16</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
     <property name="text">
      <string>Ссылка на обсуждение</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>120</y>
-      <width>211</width>
+      <x>10</x>
+      <y>70</y>
+      <width>221</width>
       <height>16</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
     <property name="text">
      <string>Текст комментария</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>370</y>
+      <x>50</x>
+      <y>260</y>
       <width>131</width>
       <height>71</height>
      </rect>
@@ -76,24 +106,57 @@
      <string>Старт</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="label">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>0</y>
-      <width>771</width>
-      <height>51</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QTimeEdit" name="timeEdit">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>180</y>
-      <width>118</width>
-      <height>22</height>
+      <x>240</x>
+      <y>30</y>
+      <width>191</width>
+      <height>31</height>
      </rect>
+    </property>
+    <property name="displayFormat">
+     <string>HH:mm:ss</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="timeDisplays">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>100</y>
+      <width>191</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>00:00:00</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>10</y>
+      <width>191</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Время начала (по системному!)</string>
     </property>
    </widget>
   </widget>
@@ -102,7 +165,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>441</width>
      <height>20</height>
     </rect>
    </property>
