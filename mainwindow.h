@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QUrl>
+#include <QJsonDocument>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,6 +18,7 @@ public:
     ~MainWindow();
 
 public slots:
+    void statusCheck(QJsonDocument);
     void url_changed(QUrl);
 
 private slots:
