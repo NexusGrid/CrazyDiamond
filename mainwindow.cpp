@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->pushButton->setDisabled(true);
+    ui->pushButton_Stop->setDisabled(true);
     ui->status->setText("Требуется авторизация");
 }
 
@@ -117,9 +118,11 @@ bool MainWindow::createComment()
     query.addQueryItem("access_token", token);
     query.addQueryItem("group_id", links[0]);
     query.addQueryItem("topic_id", links[1]);
-    query.addQueryItem("message",ui->message->toPlainText());
-
     current = query.toString();
+
+    QString temp = QUrl::toPercentEncoding(ui->message->toPlainText());
+    current = query.toString();
+    current = current.toString() + "&message=" + temp;
 
     QJsonDocument answer = GET(current);
     return isValid(answer);
@@ -156,13 +159,20 @@ void MainWindow::displayRemainingTime()
 
 void MainWindow::on_pushButton_clicked()
 {
-    QStringList links = boardLinks();
-    if(links[0] == ""){QMessageBox msgBox; msgBox.critical(0,"Ошибка","Неверная ссылка на обсуждение!");return;}
-    if(links[1] == ""){QMessageBox msgBox; msgBox.critical(0,"Ошибка","Неверная ссылка на обсуждение!");return;}
-    if(ui->message->toPlainText() == ""){QMessageBox msgBox; msgBox.critical(0,"Ошибка","Отсутствует текст комментария!"); return;}
     ui->pushButton->setDisabled(true);
+    ui->pushButton_Stop->setEnabled(true);
+    QStringList links = boardLinks();
+    if(links[0] == ""){ui->pushButton->setEnabled(true);ui->pushButton_Stop->setDisabled(true);QMessageBox msgBox; msgBox.critical(0,"Ошибка","Неверная ссылка на обсуждение!");return;}
+    if(links[1] == ""){ui->pushButton->setEnabled(true);ui->pushButton_Stop->setDisabled(true);QMessageBox msgBox; msgBox.critical(0,"Ошибка","Неверная ссылка на обсуждение!");return;}
+    if(ui->message->toPlainText() == ""){ui->pushButton->setEnabled(true);ui->pushButton_Stop->setDisabled(true);QMessageBox msgBox; msgBox.critical(0,"Ошибка","Отсутствует текст комментария!"); return;}
     do
-    {
+    {   
+        if(!ui->pushButton_Stop->isEnabled())
+        {
+            ui->pushButton->setEnabled(true);
+            ui->timeDisplays->setText("00:00:00");
+            return;
+        }
         displayRemainingTime();
         QEventLoop wait;
         QTimer::singleShot(500, &wait, SLOT(quit()));
@@ -180,4 +190,10 @@ void MainWindow::on_pushButton_clicked()
     }
     ui->timeDisplays->setText("00:00:00");
     ui->pushButton->setEnabled(true);
+    ui->pushButton_Stop->setDisabled(true);
+}
+
+void MainWindow::on_pushButton_Stop_clicked()
+{
+    ui->pushButton_Stop->setDisabled(true);
 }

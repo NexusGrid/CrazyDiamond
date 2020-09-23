@@ -99,7 +99,7 @@
       <x>50</x>
       <y>260</y>
       <width>131</width>
-      <height>71</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -217,6 +217,19 @@
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_Stop">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>310</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Стоп</string>
     </property>
    </widget>
   </widget>

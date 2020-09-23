@@ -14,5 +14,6 @@ Authorization::Authorization(QWidget *parent, MainWindow* m) :
 
 Authorization::~Authorization()
 {
+
     delete ui;
 }
