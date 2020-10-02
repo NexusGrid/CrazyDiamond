@@ -33,9 +33,9 @@ private:
     Ui::MainWindow *ui;
     QString token;
     QJsonDocument GET(QUrl);
-    bool createComment();
+    void createComment();
     QStringList boardLinks();
-    bool isValid(QJsonDocument);
     void displayRemainingTime();
+    bool isBoardClosed();
 };
 #endif // MAINWINDOW_H

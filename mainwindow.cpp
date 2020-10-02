@@ -13,6 +13,7 @@
 #include <QJsonDocument>
 #include <QMessageBox>
 #include <QJsonArray>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -105,11 +106,10 @@ QJsonDocument MainWindow::GET(QUrl url)
 
     QJsonDocument answer = QJsonDocument::fromJson(reply->readAll());
     reply->deleteLater();
-    statusCheck(answer);
     return answer;
 }
 
-bool MainWindow::createComment()
+void MainWindow::createComment()
 {
     QUrl current;
     QUrlQuery query("https://api.vk.com/method/board.createComment?");
@@ -125,7 +125,11 @@ bool MainWindow::createComment()
     current = current.toString() + "&message=" + temp;
 
     QJsonDocument answer = GET(current);
-    return isValid(answer);
+    statusCheck(answer);
+    QString strJson(answer.toJson(QJsonDocument::Compact));
+    qDebug() << current.toString();
+    qDebug() << strJson;
+    return;
 
 
 }
@@ -138,13 +142,6 @@ QStringList MainWindow::boardLinks()
     return links;
 }
 
-bool MainWindow::isValid(QJsonDocument json)
-{
-    QJsonObject root = json.object();
-    if(!root.value("error").isUndefined()) return false;
-    if(!root.value("response").isUndefined()) return true;
-
-}
 
 void MainWindow::displayRemainingTime()
 {
@@ -155,6 +152,40 @@ void MainWindow::displayRemainingTime()
     temp = temp.addSecs(secsTo);
     ui->timeDisplays->setText(temp.toString());
 
+}
+
+bool MainWindow::isBoardClosed()
+{
+    QUrl current;
+    QUrlQuery query("https://api.vk.com/method/board.getTopics?");
+    QStringList links = boardLinks();
+    query.addQueryItem("v", "5.52");
+    query.addQueryItem("access_token", token);
+    query.addQueryItem("group_id", links[0]);
+    query.addQueryItem("topic_ids", links[1]);
+    query.addQueryItem("extended", "0");
+    query.addQueryItem("preview_length", "0");
+    current = query.toString();
+    QJsonDocument answer = GET(current);
+    QJsonObject jsonAnswer = answer.object();
+    QJsonObject response = jsonAnswer.value("response").toObject();
+    QJsonArray items = response.value("items").toArray();
+    int isClosed;
+
+    foreach (const QJsonValue & value, items) {
+        QJsonObject obj = value.toObject();
+        if(obj.contains("is_closed"))
+        {
+            isClosed = obj.value("is_closed").toInt();
+        }
+    }
+
+    QString strJson(answer.toJson(QJsonDocument::Compact));
+
+    qDebug() << strJson;
+
+    if(isClosed == 0) return false;
+    if(isClosed == 1) return true;
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -181,13 +212,17 @@ void MainWindow::on_pushButton_clicked()
     }while(ui->timeEdit->time().toString() != QTime::currentTime().toString());
 
     if(ui->timeEdit->time().toString() >= QTime::currentTime().toString()){
-        while(!createComment())
+        int i = 0;
+        while(isBoardClosed())
         {
             QEventLoop wait;
-            QTimer::singleShot(3000, &wait, SLOT(quit()));
+            QTimer::singleShot(334, &wait, SLOT(quit()));
             wait.exec();
+            qDebug() << i++;
+
         }
     }
+    createComment();
     ui->timeDisplays->setText("00:00:00");
     ui->pushButton->setEnabled(true);
     ui->pushButton_Stop->setDisabled(true);
@@ -197,3 +232,4 @@ void MainWindow::on_pushButton_Stop_clicked()
 {
     ui->pushButton_Stop->setDisabled(true);
 }
+
