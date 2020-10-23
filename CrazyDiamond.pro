@@ -10,15 +10,18 @@ CONFIG += c++11
 
 SOURCES += \
     authorization.cpp \
+    gettoken.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     authorization.h \
+    gettoken.h \
     mainwindow.h
 
 FORMS += \
     authorization.ui \
+    gettoken.ui \
     mainwindow.ui
 
 # Default rules for deployment.

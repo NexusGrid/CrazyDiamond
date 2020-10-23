@@ -17,3 +17,8 @@ Authorization::~Authorization()
 
     delete ui;
 }
+
+void Authorization::closeWindow()
+{
+    this->close();
+}

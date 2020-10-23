@@ -247,6 +247,7 @@
      <string>Файл</string>
     </property>
     <addaction name="action"/>
+    <addaction name="action_2"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -254,6 +255,11 @@
   <action name="action">
    <property name="text">
     <string>Авторизация</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>Ручной ввод токена</string>
    </property>
   </action>
  </widget>

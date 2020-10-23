@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "authorization.h"
+#include "gettoken.h"
 #include "QUrl"
 #include <QUrlQuery>
 #include <QNetworkAccessManager>
@@ -79,17 +80,26 @@ void MainWindow::url_changed(QUrl u)
     token = query.queryItemValue("access_token");;
     QMessageBox msgBox;
     msgBox.setWindowTitle("Токен");
-    msgBox.setText("Токен успешно получен! Можете закрыть окно авторизации");
+    msgBox.setText("Токен успешно получен!");
     msgBox.exec();
     ui->pushButton->setEnabled(true);
     ui->status->setText("");
+    emit closeChildWindow();
 
+}
+
+void MainWindow::setToken(QString tempToken)
+{
+    token = tempToken;
+    ui->pushButton->setEnabled(true);
+    ui->status->setText("");
 }
 
 
 void MainWindow::on_action_triggered()
 {
     Authorization auth(nullptr,this);
+    connect(this, SIGNAL(closeChildWindow()), &auth,SLOT(closeWindow()));
     auth.setWindowTitle("Авторизация");
     auth.exec();
 }
@@ -233,3 +243,12 @@ void MainWindow::on_pushButton_Stop_clicked()
     ui->pushButton_Stop->setDisabled(true);
 }
 
+
+void MainWindow::on_action_2_triggered()
+{
+    Gettoken gettoken(this);
+    connect(&gettoken, SIGNAL(tokenSet(QString)), this, SLOT(setToken(QString)));
+    gettoken.setWindowTitle("Ручной ввод токена");
+    gettoken.exec();
+
+}

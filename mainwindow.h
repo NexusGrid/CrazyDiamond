@@ -20,6 +20,7 @@ public:
 public slots:
     void statusCheck(QJsonDocument);
     void url_changed(QUrl);
+    void setToken(QString tempToken);
 
 private slots:
     void on_action_triggered();
@@ -28,6 +29,13 @@ private slots:
 
 
     void on_pushButton_Stop_clicked();
+
+    void on_action_2_triggered();
+
+signals:
+    void closeChildWindow();
+
+
 
 private:
     Ui::MainWindow *ui;

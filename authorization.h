@@ -16,6 +16,9 @@ public:
     explicit Authorization(QWidget *parent = nullptr, MainWindow *m = nullptr);
     ~Authorization();
 
+public slots:
+    void closeWindow();
+
 private:
     Ui::Authorization *ui;
 };
